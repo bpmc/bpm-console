@@ -19,7 +19,7 @@
     <dependency>
       <groupId>org.jboss.bpm</groupId>
       <artifactId>gwt-console-rpc</artifactId>
-      <version>${version}</version>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>

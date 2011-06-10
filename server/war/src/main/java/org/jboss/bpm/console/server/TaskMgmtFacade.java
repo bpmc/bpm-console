@@ -72,7 +72,8 @@ public class TaskMgmtFacade
   /**
    * Lazy load the {@link org.jboss.bpm.console.server.integration.TaskManagement}
    */
-  private FormDispatcherPlugin getFormDispatcherPlugin()
+  @SuppressWarnings("unused")
+private FormDispatcherPlugin getFormDispatcherPlugin()
   {
     if(null==this.formPlugin)
     {

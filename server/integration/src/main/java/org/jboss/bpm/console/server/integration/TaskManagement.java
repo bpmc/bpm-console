@@ -49,15 +49,15 @@ public interface TaskManagement
   /**
    * complete a task
    */
-  void completeTask(long taskId, Map data, String userId);
+  void completeTask(long taskId, Map<String, Object> data, String userId);
 
   /**
    * complete a task with a given outcome (trigger)
    */
-  void completeTask(long taskId, String outcome, Map data, String userId);
+  void completeTask(long taskId, String outcome, Map<String, Object> data, String userId);
 
   /**
-   * get tasks assingned to a user
+   * get tasks assigned to a user
    */
   List<TaskRef> getAssignedTasks(String idRef);
 

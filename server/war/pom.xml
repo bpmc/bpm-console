@@ -25,7 +25,7 @@
     <dependency>
       <groupId>org.jboss.bpm</groupId>
       <artifactId>gwt-console-server-integration</artifactId>
-      <version>${version}</version>
+      <version>${project.version}</version>
       <scope>provided</scope>
     </dependency>
 

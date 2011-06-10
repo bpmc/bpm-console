@@ -131,13 +131,13 @@
             <groupId>org.jboss.bpm</groupId>
             <artifactId>gwt-console-rpc</artifactId>
             <classifier>sources</classifier>
-            <version>${version}</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.jboss.bpm</groupId>
             <artifactId>gwt-console-rpc</artifactId>
-            <version>${version}</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
 
@@ -385,7 +385,7 @@
                         <configuration>
                             <tasks>
                                 <ant antfile="scripts/antrun-version.xml" inheritAll="false" inheritRefs="false">
-                                    <property name="version" value="${version}" />
+                                    <property name="version" value="${project.version}" />
                                     <property name="src.dir" value="${project.build.directory}/generated-sources" />
                                 </ant>
                             </tasks>
@@ -514,7 +514,7 @@
                 <dependency>
                     <groupId>org.jboss.bpm</groupId>
                     <artifactId>gwt-console-profile-jbpm</artifactId>
-                    <version>${version}</version>
+                    <version>${project.version}</version>
                     <scope>provided</scope>
                 </dependency>
             </dependencies>
@@ -538,7 +538,7 @@
                                         <artifactItem>
                                             <groupId>org.jboss.bpm</groupId>
                                             <artifactId>gwt-console-profile-jbpm</artifactId>
-                                            <version>${version}</version>
+                                            <version>${project.version}</version>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
                                             <outputDirectory>war/app</outputDirectory>
@@ -560,7 +560,7 @@
                                         <artifactItem>
                                             <groupId>org.jboss.bpm</groupId>
                                             <artifactId>gwt-console-profile-jbpm</artifactId>
-                                            <version>${version}</version>
+                                            <version>${project.version}</version>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
                                             <outputDirectory>war/app</outputDirectory>
@@ -602,7 +602,7 @@
                 <dependency>
                     <groupId>org.jboss.bpm</groupId>
                     <artifactId>gwt-console-profile-drools</artifactId>
-                    <version>${version}</version>
+                    <version>${project.version}</version>
                     <scope>provided</scope>
                 </dependency>
             </dependencies>
@@ -627,7 +627,7 @@
                                         <artifactItem>
                                             <groupId>org.jboss.bpm</groupId>
                                             <artifactId>gwt-console-profile-drools</artifactId>
-                                            <version>${version}</version>
+                                            <version>${project.version}</version>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
                                             <outputDirectory>war/app</outputDirectory>
@@ -647,7 +647,7 @@
                                         <artifactItem>
                                             <groupId>org.jboss.bpm</groupId>
                                             <artifactId>gwt-console-profile-drools</artifactId>
-                                            <version>${version}</version>
+                                            <version>${project.version}</version>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
                                             <outputDirectory>war/app</outputDirectory>
@@ -687,7 +687,7 @@
                 <dependency>
                     <groupId>org.jboss.bpm</groupId>
                     <artifactId>gwt-console-profile-riftsaw</artifactId>
-                    <version>${version}</version>
+                    <version>${project.version}</version>
                     <scope>provided</scope>
                 </dependency>
             </dependencies>
@@ -712,7 +712,7 @@
                                         <artifactItem>
                                             <groupId>org.jboss.bpm</groupId>
                                             <artifactId>gwt-console-profile-riftsaw</artifactId>
-                                            <version>${version}</version>
+                                            <version>${project.version}</version>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
                                             <outputDirectory>war/app</outputDirectory>
@@ -732,7 +732,7 @@
                                         <artifactItem>
                                             <groupId>org.jboss.bpm</groupId>
                                             <artifactId>gwt-console-profile-riftsaw</artifactId>
-                                            <version>${version}</version>
+                                            <version>${project.version}</version>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
                                             <outputDirectory>war/app</outputDirectory>
@@ -753,7 +753,7 @@
                                         <artifactItem>
                                             <groupId>org.jboss.bpm</groupId>
                                             <artifactId>gwt-console-profile-riftsaw</artifactId>
-                                            <version>${version}</version>
+                                            <version>${project.version}</version>
                                             <type>jar</type>
                                             <overWrite>true</overWrite>
                                             <outputDirectory>war</outputDirectory>
