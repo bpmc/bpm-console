@@ -264,6 +264,16 @@
             </resource>
           </webResources>
         </configuration>
+        <executions>
+          <execution>
+            <id>default-war</id>
+            <configuration>
+              <filters>
+                <filter>${project.basedir}/src/main/properties/default.properties</filter>
+              </filters>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
 
 
@@ -319,71 +329,98 @@
   -->
   <profiles>
     <profile>
-      <id>jbpm-server.profile</id>
+      <id>jbpm</id>
       <activation>
         <property>
           <name>!console.profile</name>
         </property>
       </activation>
-      <properties>
-        <server.jaas.domain>java:/jaas/jbpm-console</server.jaas.domain>
-      </properties>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
-            <configuration>
-              <classifier>jbpm</classifier>
-            </configuration>
+            <executions>
+              <execution>
+                <id>jbpm-war</id>
+                <goals>
+                  <goal>war</goal>
+                </goals>
+                <configuration>
+                  <filters>
+                    <filter>${project.basedir}/src/main/properties/jbpm.properties</filter>
+                  </filters>
+                  <webappDirectory>${project.build.directory}/jbpm-war</webappDirectory>
+                  <classifier>jbpm</classifier>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
     </profile>
 
     <profile>
-      <id>drools-server.profile</id>
+      <id>drools</id>
       <activation>
         <property>
           <name>console.profile</name>
           <value>drools</value>
         </property>
       </activation>
-      <properties>
-        <server.jaas.domain>java:/jaas/drools-console</server.jaas.domain>
-      </properties>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
-            <configuration>
-              <classifier>drools</classifier>
-            </configuration>
+            <executions>
+              <execution>
+                <id>drools-war</id>
+                <goals>
+                  <goal>war</goal>
+                </goals>
+                <configuration>
+                  <filters>
+                    <filter>${project.basedir}/src/main/properties/drools.properties</filter>
+                  </filters>
+                  <webappDirectory>${project.build.directory}/drools-war</webappDirectory>
+                  <classifier>drools</classifier>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>
     </profile>
 
     <profile>
-      <id>riftsaw-server.profile</id>
+      <id>riftsaw</id>
       <activation>
         <property>
           <name>console.profile</name>
           <value>riftsaw</value>
         </property>
       </activation>
-      <properties>
-        <server.jaas.domain>java:/jaas/bpel-console</server.jaas.domain>
-      </properties>
       <build>
         <plugins>
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
-            <configuration>
-              <classifier>riftsaw</classifier>
-            </configuration>
+            <executions>
+              <execution>
+                <id>riftsaw-war</id>
+                <goals>
+                  <goal>war</goal>
+                </goals>
+                <configuration>
+                  <filters>
+                    <filter>${project.basedir}/src/main/properties/riftsaw.properties</filter>
+                  </filters>
+                  <webappDirectory>${project.build.directory}/riftsaw-war</webappDirectory>
+                  <classifier>riftsaw</classifier>
+                </configuration>
+              </execution>
+            </executions>
           </plugin>
         </plugins>
       </build>

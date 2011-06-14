@@ -1,0 +1,28 @@
+<settings>
+  <localRepository>/Users/jdcasey/workspace/temp/bpm-console/local-repository</localRepository>
+  <mirrors>
+    <mirror>
+      <id>developer</id>
+      <mirrorOf>*</mirrorOf>
+      <url>http://developer.commonjava.org/repo/repository/px-mead-shared-maven3-sunjdk16-build</url>
+    </mirror>
+  </mirrors>
+  <servers>
+    <server>
+      <id>developer</id>
+      <username>admin</username>
+      <password>admin123</password>
+    </server>
+  </servers>
+  <profiles>
+    <profile>
+      <id>deploy-divert</id>
+      <properties>
+        <altDeploymentRepository>developer::default::http://developer.commonjava.org/repo/repository/internal</altDeploymentRepository>
+      </properties>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>deploy-divert</activeProfile>
+  </activeProfiles>
+</settings>

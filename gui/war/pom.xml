@@ -15,9 +15,7 @@
     </parent>
 
     <properties>
-        <gwt-maven.version>2.0-RC1</gwt-maven.version>
-        <comment.left>&lt;!--</comment.left>
-        <comment.right>--&gt;</comment.right>
+        <default.war.output>${project.build.directory}/default-war</default.war.output>
     </properties>
 
     <!--  Dependencies -->
@@ -296,26 +294,26 @@
     <!-- Plugins -->
     <build>
         <finalName>gwt-console</finalName>
-        <outputDirectory>war/WEB-INF/classes</outputDirectory>
 
         <plugins>
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>gwt-maven-plugin</artifactId>
-                <version>${gwt.maven}</version>
                 <configuration>
                     <inplace>true</inplace>
                     <logLevel>INFO</logLevel>
                     <runTarget>app.html</runTarget>
-                    <warSourceDirectory>war</warSourceDirectory>
                     <extraJvmArgs>-Xmx1024m -XX:+UseParallelGC -server</extraJvmArgs>
                     <localWorkers>2</localWorkers>
                     <soyc>false</soyc>
                     <style>OBF</style>
+                    <warSourceDirectory>${project.build.directory}/gwt-compiled</warSourceDirectory>
+                    <webappDirectory>${project.build.directory}/gwt-compiled</webappDirectory>
                 </configuration>
                 <executions>
                     <execution>
+                      <id>gwt-clean-compile</id>
                         <goals>
                             <goal>clean</goal>
                             <goal>compile</goal>
@@ -324,58 +322,67 @@
                 </executions>
             </plugin>
             <plugin>
+              <artifactId>maven-resources-plugin</artifactId>
+              <configuration>
+                <resources>
+                  <resource>
+                    <directory>${project.basedir}/src/main/templates</directory>
+                    <filtering>true</filtering>
+                  </resource>
+                </resources>
+              </configuration>
+              
+              <executions>
+                <execution>
+                  <id>hosted-mode-default</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                    <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                    <outputDirectory>${default.war.output}</outputDirectory>
+                    <filters>
+                      <filter>${project.basedir}/src/main/properties/default.properties</filter>
+                    </filters>
+                  </configuration>
+                </execution>
+                <execution>
+                  <id>deploy-mode-default</id>
+                  <phase>prepare-package</phase>
+                  <goals>
+                    <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                    <outputDirectory>${default.war.output}</outputDirectory>
+                    <filters>
+                      <filter>${project.basedir}/src/main/properties/common-deploy.properties</filter>
+                      <filter>${project.basedir}/src/main/properties/default.properties</filter>
+                    </filters>
+                    <excludes>
+                      <exclude>**/errai-proxy.json</exclude>
+                    </excludes>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+            
+            <plugin>
                 <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                    <warSourceDirectory>war</warSourceDirectory>
-                    <webappDirectory>war</webappDirectory>
                     <warSourceExcludes>.gwt-tmp/**</warSourceExcludes>
                     <webResources>
-                        <resource>
-                            <!-- this is relative to the pom.xml directory -->
-                            <directory>src/main/templates</directory>
-                            <filtering>true</filtering>
-                        </resource>
+                      <webResource>
+                        <directory>${project.build.directory}/gwt-compiled</directory>
+                      </webResource>
                     </webResources>
-                </configuration>
-            </plugin>
-            <plugin>
-                <artifactId>maven-clean-plugin</artifactId>
-                <version>2.2</version>
-                <configuration>
-                    <skip>true</skip>
+                    <webappDirectory>${default.war.output}</webappDirectory>
                 </configuration>
             </plugin>
 
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
-                <version>1.2</version>
                 <executions>
-                    <execution>
-                        <id>clean.war</id>
-                        <phase>clean</phase>
-                        <configuration>
-                            <tasks>
-                                <!--
-                                    The gwt-maven-plugin use the war source folder
-                                    as it's build directory. We need to cleanup after we'd run
-                                    the plugin and remove all GWT related artifacts that are required
-                                    to run the hosted mode.
-                                -->
-                                <delete dir="war/WEB-INF/classes"/>
-                                <delete dir="war/WEB-INF/lib"/>
-                                <delete file="war/WEB-INF/jboss-web.xml"/>
-                                <delete file="war/WEB-INF/web.xml"/>
-                                <delete dir="war/app"/>
-                                <delete dir="target"/>
-
-                            </tasks>
-                        </configuration>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                    </execution>
-
                     <execution>
                         <id>generate-version-class</id>
                         <phase>generate-sources</phase>
@@ -386,71 +393,52 @@
                             <tasks>
                                 <ant antfile="scripts/antrun-version.xml" inheritAll="false" inheritRefs="false">
                                     <property name="version" value="${version}" />
-                                    <property name="src.dir" value="${project.build.directory}/generated-sources" />
+                                    <property name="src.dir" value="${project.build.directory}/generated-sources/antrun" />
                                 </ant>
                             </tasks>
-                            <sourceRoot>
-                                ${project.build.directory}/generated-sources
-                            </sourceRoot>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>hosted mode web.xml</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <filter token="comment.left" value="" />
-                                <filter token="comment.right" value="" />
-                                <filter token="console.app.webcontext" value="${console.app.webcontext}" />
-                                <copy file="src/main/templates/WEB-INF/web.xml"
-                                      todir="war/WEB-INF"
-                                      filtering="true" overwrite="true"/>
-
-                                <copy file="src/main/templates/errai-proxy.json"
-                                      todir="war/WEB-INF/classes"
-                                      filtering="true" overwrite="true"/>
-                            </tasks>
-                            <sourceRoot>
-                                ${project.build.directory}/generated-sources
-                            </sourceRoot>
-                        </configuration>
-                    </execution>
-
-                    <execution>
-                        <id>deployment web.xml</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>run</goal>
-                        </goals>
-                        <configuration>
-                            <tasks>
-                                <filter token="comment.left" value="${comment.left}" />
-                                <filter token="comment.right" value="${comment.right}" />
-                                <copy file="src/main/templates/WEB-INF/web.xml"
-                                      todir="war/WEB-INF"
-                                      filtering="true" overwrite="true"/>
-                            </tasks>
-                            <sourceRoot>
-                                ${project.build.directory}/generated-sources
-                            </sourceRoot>
                         </configuration>
                     </execution>
                 </executions>
             </plugin>
 
             <plugin>
-                <artifactId>maven-compiler-plugin</artifactId>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>build-helper-maven-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>include-antrun-sources</id>
+                  <phase>process-sources</phase>
+                  <goals>
+                    <goal>add-source</goal>
+                  </goals>
+                  <configuration>
+                    <sources>
+                      <source>${project.build.directory}/generated-sources/antrun</source>
+                    </sources>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+        </plugins>
+        
+        <pluginManagement>
+          <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
                 <configuration>
-                    <source>1.5</source>
-                    <target>1.5</target>
+                    <artifactItems>
+                        <artifactItem>
+                            <version>${version}</version>
+                            <type>jar</type>
+                            <overWrite>true</overWrite>
+                            <includes>**/*</includes>
+                        </artifactItem>
+                    </artifactItems>
                 </configuration>
             </plugin>
-
-        </plugins>
+          </plugins>
+        </pluginManagement>
     </build>
 
     <profiles>
@@ -504,7 +492,7 @@
          =======================================================
         -->
         <profile>
-            <id>jbpm-console.profile</id>
+            <id>jbpm</id>
             <activation>
                 <property>
                     <name>!console.profile</name>
@@ -519,10 +507,45 @@
                 </dependency>
             </dependencies>
             <properties>
-                <console.app.webcontext>jbpm-console</console.app.webcontext>
+              <jbpm.war.output>${project.build.directory}/jbpm-war</jbpm.war.output>
             </properties>
             <build>
                 <plugins>
+                  <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <executions>
+                      <execution>
+                        <id>hosted-mode-jbpm</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                          <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                          <outputDirectory>${jbpm.war.output}</outputDirectory>
+                          <filters>
+                            <filter>${project.basedir}/src/main/properties/jbpm.properties</filter>
+                          </filters>
+                        </configuration>
+                      </execution>
+                      <execution>
+                        <id>deploy-mode-jbpm</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                          <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                          <outputDirectory>${jbpm.war.output}</outputDirectory>
+                          <filters>
+                            <filter>${project.basedir}/src/main/properties/common-deploy.properties</filter>
+                            <filter>${project.basedir}/src/main/properties/jbpm.properties</filter>
+                          </filters>
+                          <excludes>
+                            <exclude>**/errai-proxy.json</exclude>
+                          </excludes>
+                        </configuration>
+                      </execution>
+                    </executions>
+                  </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
@@ -538,11 +561,7 @@
                                         <artifactItem>
                                             <groupId>org.jboss.bpm</groupId>
                                             <artifactId>gwt-console-profile-jbpm</artifactId>
-                                            <version>${version}</version>
-                                            <type>jar</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>war/app</outputDirectory>
-                                            <includes>**/*</includes>
+                                            <outputDirectory>${jbpm.war.output}/app</outputDirectory>
                                         </artifactItem>
                                     </artifactItems>
                                 </configuration>
@@ -560,11 +579,7 @@
                                         <artifactItem>
                                             <groupId>org.jboss.bpm</groupId>
                                             <artifactId>gwt-console-profile-jbpm</artifactId>
-                                            <version>${version}</version>
-                                            <type>jar</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>war/app</outputDirectory>
-                                            <includes>**/*</includes>
+                                            <outputDirectory>${jbpm.war.output}/app</outputDirectory>
                                         </artifactItem>
                                     </artifactItems>
                                 </configuration>
@@ -576,9 +591,18 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-war-plugin</artifactId>
-                        <configuration>
-                            <classifier>jbpm</classifier>
-                        </configuration>
+                        <executions>
+                          <execution>
+                            <id>jbpm-war</id>
+                            <goals>
+                              <goal>war</goal>
+                            </goals>
+                            <configuration>
+                              <webappDirectory>${jbpm.war.output}</webappDirectory>
+                              <classifier>jbpm</classifier>
+                            </configuration>
+                          </execution>
+                        </executions>
                     </plugin>
                 </plugins>
 
@@ -591,7 +615,7 @@
            =======================================================
         -->
         <profile>
-            <id>drools-console.profile</id>
+            <id>drools</id>
             <activation>
                 <property>
                     <name>console.profile</name>
@@ -607,10 +631,45 @@
                 </dependency>
             </dependencies>
             <properties>
-                <console.app.webcontext>gwt-console</console.app.webcontext>
+              <drools.war.output>${project.build.directory}/drools-war</drools.war.output>
             </properties>
             <build>
                 <plugins>
+                  <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <executions>
+                      <execution>
+                        <id>hosted-mode-drools</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                          <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                          <outputDirectory>${drools.war.output}</outputDirectory>
+                          <filters>
+                            <filter>${project.basedir}/src/main/properties/drools.properties</filter>
+                          </filters>
+                        </configuration>
+                      </execution>
+                      <execution>
+                        <id>deploy-mode-drools</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                          <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                          <outputDirectory>${drools.war.output}</outputDirectory>
+                          <filters>
+                            <filter>${project.basedir}/src/main/properties/common-deploy.properties</filter>
+                            <filter>${project.basedir}/src/main/properties/drools.properties</filter>
+                          </filters>
+                          <excludes>
+                            <exclude>**/errai-proxy.json</exclude>
+                          </excludes>
+                        </configuration>
+                      </execution>
+                    </executions>
+                  </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
@@ -627,11 +686,7 @@
                                         <artifactItem>
                                             <groupId>org.jboss.bpm</groupId>
                                             <artifactId>gwt-console-profile-drools</artifactId>
-                                            <version>${version}</version>
-                                            <type>jar</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>war/app</outputDirectory>
-                                            <includes>**/*</includes>
+                                            <outputDirectory>${drools.war.output}/app</outputDirectory>
                                         </artifactItem>
                                     </artifactItems>
                                 </configuration>
@@ -647,11 +702,7 @@
                                         <artifactItem>
                                             <groupId>org.jboss.bpm</groupId>
                                             <artifactId>gwt-console-profile-drools</artifactId>
-                                            <version>${version}</version>
-                                            <type>jar</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>war/app</outputDirectory>
-                                            <includes>**/*</includes>
+                                            <outputDirectory>${drools.war.output}/app</outputDirectory>
                                         </artifactItem>
                                     </artifactItems>
                                 </configuration>
@@ -662,9 +713,18 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-war-plugin</artifactId>
-                        <configuration>
-                            <classifier>drools</classifier>
-                        </configuration>
+                        <executions>
+                          <execution>
+                            <id>drools-war</id>
+                            <goals>
+                              <goal>war</goal>
+                            </goals>
+                            <configuration>
+                              <webappDirectory>${drools.war.output}</webappDirectory>
+                              <classifier>drools</classifier>
+                            </configuration>
+                          </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
@@ -676,7 +736,7 @@
          =======================================================
         -->
         <profile>
-            <id>riftsaw-console.profile</id>
+            <id>riftsaw</id>
             <activation>
                 <property>
                     <name>console.profile</name>
@@ -692,10 +752,45 @@
                 </dependency>
             </dependencies>
             <properties>
-                <console.app.webcontext>bpel-console</console.app.webcontext>
+              <riftsaw.war.output>${project.build.directory}/riftsaw-war</riftsaw.war.output>
             </properties>
             <build>
                 <plugins>
+                  <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <executions>
+                      <execution>
+                        <id>hosted-mode-riftsaw</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                          <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                          <outputDirectory>${riftsaw.war.output}</outputDirectory>
+                          <filters>
+                            <filter>${project.basedir}/src/main/properties/riftsaw.properties</filter>
+                          </filters>
+                        </configuration>
+                      </execution>
+                      <execution>
+                        <id>deploy-mode-riftsaw</id>
+                        <phase>prepare-package</phase>
+                        <goals>
+                          <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                          <outputDirectory>${riftsaw.war.output}</outputDirectory>
+                          <filters>
+                            <filter>${project.basedir}/src/main/properties/common-deploy.properties</filter>
+                            <filter>${project.basedir}/src/main/properties/riftsaw.properties</filter>
+                          </filters>
+                          <excludes>
+                            <exclude>**/errai-proxy.json</exclude>
+                          </excludes>
+                        </configuration>
+                      </execution>
+                    </executions>
+                  </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
@@ -712,11 +807,7 @@
                                         <artifactItem>
                                             <groupId>org.jboss.bpm</groupId>
                                             <artifactId>gwt-console-profile-riftsaw</artifactId>
-                                            <version>${version}</version>
-                                            <type>jar</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>war/app</outputDirectory>
-                                            <includes>**/*</includes>
+                                            <outputDirectory>${riftsaw.war.output}/app</outputDirectory>
                                         </artifactItem>
                                     </artifactItems>
                                 </configuration>
@@ -732,12 +823,8 @@
                                         <artifactItem>
                                             <groupId>org.jboss.bpm</groupId>
                                             <artifactId>gwt-console-profile-riftsaw</artifactId>
-                                            <version>${version}</version>
-                                            <type>jar</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>war/app</outputDirectory>
-                                            <includes>**/*</includes>
-											<excludes>**/app.html</excludes>
+                                            <outputDirectory>${riftsaw.war.output}/app</outputDirectory>
+                                            <excludes>**/app.html</excludes>
                                         </artifactItem>
                                     </artifactItems>
                                 </configuration>
@@ -753,10 +840,7 @@
                                         <artifactItem>
                                             <groupId>org.jboss.bpm</groupId>
                                             <artifactId>gwt-console-profile-riftsaw</artifactId>
-                                            <version>${version}</version>
-                                            <type>jar</type>
-                                            <overWrite>true</overWrite>
-                                            <outputDirectory>war</outputDirectory>
+                                            <outputDirectory>${riftsaw.war.output}</outputDirectory>
                                             <includes>**/app.html</includes>
                                         </artifactItem>
                                     </artifactItems>
@@ -768,9 +852,18 @@
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-war-plugin</artifactId>
-                        <configuration>
-                            <classifier>riftsaw</classifier>
-                        </configuration>
+                        <executions>
+                          <execution>
+                            <id>riftsaw-war</id>
+                            <goals>
+                              <goal>war</goal>
+                            </goals>
+                            <configuration>
+                              <webappDirectory>${riftsaw.war.output}</webappDirectory>
+                              <classifier>riftsaw</classifier>
+                            </configuration>
+                          </execution>
+                        </executions>
                     </plugin>
 
                 </plugins>
