@@ -337,11 +337,6 @@
   <profiles>
     <profile>
       <id>jbpm</id>
-      <activation>
-        <property>
-          <name>!console.profile</name>
-        </property>
-      </activation>
       <build>
         <plugins>
           <plugin>
@@ -369,12 +364,6 @@
 
     <profile>
       <id>drools</id>
-      <activation>
-        <property>
-          <name>console.profile</name>
-          <value>drools</value>
-        </property>
-      </activation>
       <build>
         <plugins>
           <plugin>
@@ -402,12 +391,6 @@
 
     <profile>
       <id>riftsaw</id>
-      <activation>
-        <property>
-          <name>console.profile</name>
-          <value>riftsaw</value>
-        </property>
-      </activation>
       <build>
         <plugins>
           <plugin>
