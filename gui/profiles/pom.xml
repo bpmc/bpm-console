@@ -20,7 +20,6 @@
 
   <modules>
     <module>jbpm</module>
-    <module>drools</module>
     <module>riftsaw</module>
   </modules>
 </project>
