@@ -28,7 +28,7 @@ import com.mvc4g.client.ViewInterface;
 import org.gwt.mosaic.ui.client.layout.FillLayout;
 import org.gwt.mosaic.ui.client.layout.MosaicPanel;
 import org.jboss.bpm.console.client.common.WidgetWindowPanel;
-import org.jboss.bpm.console.client.search.UpdateSearchDefinitionsAction;
+import org.jboss.bpm.console.client.report.search.UpdateSearchDefinitionsAction;
 import org.jboss.bpm.report.model.ReportReference;
 import org.jboss.errai.workspaces.client.api.ProvisioningCallback;
 import org.jboss.errai.workspaces.client.api.WidgetProvider;
