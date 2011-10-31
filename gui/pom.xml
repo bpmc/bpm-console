@@ -18,6 +18,7 @@
 
   <modules>
     <module>profiles</module>
-    <module>war</module>    
+    <module>war</module>
+    <module>screens</module>
   </modules>
 </project>
