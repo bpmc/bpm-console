@@ -49,6 +49,8 @@ import org.jboss.errai.workspaces.client.framework.Registry;
 
 import java.util.List;
 
+import static org.jboss.bpm.console.client.common.ModelCommands.HAS_BEEN_UPDATED;
+
 /**
  * @author Heiko.Braun <heiko.braun@jboss.com>
  */

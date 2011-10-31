@@ -10,7 +10,8 @@
     <inherits name="com.google.gwt.xml.XML" />
 
     <inherits name="org/jboss/bpm/monitor/gui/Monitor"/>
-    
+    <inherits name="org.jboss.bpm.console.Screens"/>
+
     <inherits name="org.jboss.errai.common.ErraiCommon"/>
     <inherits name="org.jboss.errai.bus.ErraiBus" />
     <inherits name="org.jboss.errai.workspaces.ErraiWorkspaces" />
