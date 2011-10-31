@@ -73,6 +73,18 @@
       <scope>provided</scope>
     </dependency>
 
+    <dependency>
+      <groupId>org.jboss.bpm</groupId>
+      <artifactId>report-shared</artifactId>
+      <classifier>sources</classifier>
+      <version>${report.server.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.jboss.bpm</groupId>
+      <artifactId>report-shared</artifactId>
+      <version>${report.server.version}</version>
+    </dependency>
+
     <!-- GWT -->
     <dependency>
       <groupId>com.google.gwt</groupId>
