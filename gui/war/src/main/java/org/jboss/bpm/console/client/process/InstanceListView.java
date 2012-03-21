@@ -53,6 +53,7 @@ import org.jboss.bpm.console.client.model.ProcessInstanceRef;
 import org.jboss.bpm.console.client.model.TokenReference;
 import org.jboss.bpm.console.client.process.events.InstanceEvent;
 import org.jboss.bpm.console.client.process.events.SignalInstanceEvent;
+import org.jboss.bpm.console.client.util.ConsoleLog;
 import org.jboss.bpm.console.client.util.SimpleDateFormat;
 import org.jboss.errai.workspaces.client.api.ProvisioningCallback;
 import org.jboss.errai.workspaces.client.api.WidgetProvider;
@@ -60,6 +61,8 @@ import org.jboss.errai.workspaces.client.framework.Registry;
 
 import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.dom.client.ClickHandler;
+import com.google.gwt.event.dom.client.FocusEvent;
+import com.google.gwt.event.dom.client.FocusHandler;
 import com.mvc4g.client.Controller;
 import com.mvc4g.client.Event;
 import com.mvc4g.client.ViewInterface;
@@ -109,6 +112,8 @@ public class InstanceListView implements WidgetProvider, ViewInterface, DataDriv
     private TextBox eventData = null;
 
     private ImageResource greenIcon;
+
+	private TextBox signalRef = null;
 
     public void provideWidget(ProvisioningCallback callback)
     {
@@ -353,6 +358,7 @@ public class InstanceListView implements WidgetProvider, ViewInterface, DataDriv
             {
                 public void onClick(ClickEvent clickEvent)
                 {
+                	
                 	if (getSelection() != null)
                     {
                 		createSignalWindow();
@@ -560,12 +566,38 @@ public class InstanceListView implements WidgetProvider, ViewInterface, DataDriv
                     public void onClick(ClickEvent clickEvent)
                     {
                         int selectedToken = listBoxTokens.getSelectedIndex();
+                     // issue warning if user selected row and typed into signal ref text box
+                    	if (selectedToken != -1 && signalRef.getText().length() > 0)
+                    	{
+                    		MessageBox.alert("Multi selection", "Known active nodes and signal ref (text box) is given, please choose only one of them");
+                    	} else 
                         
                         if (selectedToken != -1) {
 
                             controller.handleEvent(
                                     new Event(SignalExecutionAction.ID,
                                             new SignalInstanceEvent(getCurrentDefinition(), getSelection(), listBoxTokens.getItem(selectedToken), eventData.getText(), selectedToken)));
+
+                        } else if (signalRef.getText().length() > 0) {
+                        	
+                        	TokenReference token = new TokenReference();
+                        	token.setId(getSelection().getId());
+                        	token.setName(signalRef.getText());
+                        	int foundMatch = -1;
+                        	int index = 0;
+                        	// try to find matching element from the list to avoid double signal problems
+                        	for (TokenReference ref : tokensToSignal)
+                        	{
+                        		if (ref.getName().equals(token.getName())) {
+                        			foundMatch = index;
+                        			break;
+                        		}
+                        		index++;
+                        	}
+                        	
+                            controller.handleEvent(
+                                    new Event(SignalExecutionAction.ID,
+                                            new SignalInstanceEvent(getCurrentDefinition(), getSelection(), token, eventData.getText(), foundMatch)));
 
                         } else {
                             MessageBox.alert("Incomplete selection", "Please select element you want to signal");
@@ -578,7 +610,7 @@ public class InstanceListView implements WidgetProvider, ViewInterface, DataDriv
         );
 
         toolBar.add(
-                new Button("Cancel", new ClickHandler() {
+                new Button("Close", new ClickHandler() {
 
                     public void onClick(ClickEvent clickEvent)
                     {
@@ -590,13 +622,15 @@ public class InstanceListView implements WidgetProvider, ViewInterface, DataDriv
                 )
         );
 
-        Label header = new Label("Available nodes to signal: ");
-        header.setStyleName("bpm-label-header");
-        layout.add(header, new BoxLayoutData(BoxLayoutData.FillStyle.HORIZONTAL));
+        
 
         toolBox.add(toolBar, new BoxLayoutData(BoxLayoutData.FillStyle.HORIZONTAL));
 
         layout.add(toolBox, new BoxLayoutData(BoxLayoutData.FillStyle.HORIZONTAL));
+        
+        Label header = new Label("Known active nodes to signal: ");
+        header.setStyleName("bpm-label-header");
+        layout.add(header, new BoxLayoutData(BoxLayoutData.FillStyle.HORIZONTAL));
 
         listBoxTokens = new ListBox<TokenReference>(new String[] { "Node name", "Signal ref" });
 
@@ -619,6 +653,23 @@ public class InstanceListView implements WidgetProvider, ViewInterface, DataDriv
 
         renderSignalListBox(-1);
         layout.add(listBoxTokens, new BoxLayoutData(BoxLayoutData.FillStyle.BOTH));
+        
+        Label headerSignalRef = new Label("Signal ref");
+        headerSignalRef.setStyleName("bpm-label-header");
+        layout.add(headerSignalRef, new BoxLayoutData(BoxLayoutData.FillStyle.HORIZONTAL));
+
+        signalRef = new TextBox();
+        signalRef.addFocusHandler(new FocusHandler() {
+			
+			@Override
+			public void onFocus(FocusEvent event) {
+				if (listBox.getSelectedIndex() != -1) {
+					listBoxTokens.setItemSelected(listBox.getSelectedIndex(), false);
+				}
+			}
+		});
+
+        layout.add(signalRef, new BoxLayoutData(BoxLayoutData.FillStyle.BOTH));
 
         Label headerSignals = new Label("Event data");
         headerSignals.setStyleName("bpm-label-header");
@@ -642,36 +693,24 @@ public class InstanceListView implements WidgetProvider, ViewInterface, DataDriv
             tokensToSignal.remove(i);
         }
 
-        // if available token list is empty close window
-        if (tokensToSignal.isEmpty()) {
-            signalWindowPanel.close();
-            Timer t = new Timer()
-            {
-              @Override
-              public void run()
-              {
-                // force reload instance list
-                controller.handleEvent(
-                    new Event(UpdateInstancesAction.ID, getCurrentDefinition())
-                );
-              }
-            };
-
-            t.schedule(1000);
-        } else {
-
+        ((DefaultListModel<TokenReference>)listBoxTokens.getModel()).clear();
+        if (!tokensToSignal.isEmpty()) {
 	        // display all remaining token possible to signal
-	        ((DefaultListModel<TokenReference>)listBoxTokens.getModel()).clear();
+	        
 	        for (TokenReference token : tokensToSignal) {
 	            ((DefaultListModel<TokenReference>)listBoxTokens.getModel()).add(token);
 	        }
-	
-	        // clear available signal list box
-	        if (eventData != null) {
-	            
-	            eventData.setText("");
-	        }
         }
+        // clear 
+        if (signalRef != null) {
+            
+        	signalRef.setText("");
+        }
+        if (eventData != null) {
+            
+            eventData.setText("");
+        }
+        
     }
 
 
