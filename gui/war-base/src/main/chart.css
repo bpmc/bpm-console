@@ -1,0 +1,28 @@
+
+series.s0 line {
+    color: green;
+}
+
+.s0 point {
+  color: green;
+  background-color: green
+}
+
+
+series.s1 line {
+    color: red;
+}
+
+.s1 point {
+  color: red;
+  background-color: red
+}
+
+series.s2 line {
+    color: blue;
+}
+
+.s2 point {
+  color: blue;
+  background-color: blue
+}
