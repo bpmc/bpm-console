@@ -1,0 +1,50 @@
+<!DOCTYPE web-app PUBLIC
+        "-//Sun Microsystems, Inc.//DTD Web Application 2.3//EN"
+        "http://java.sun.com/dtd/web-app_2_3.dtd" >
+
+<web-app>
+    <display-name>BPM Console UI</display-name>
+
+    @comment.left@
+    <servlet>
+        <servlet-name>xmlProxy</servlet-name>
+        <servlet-class>org.jboss.errai.tools.proxy.XmlHttpProxyServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
+        <servlet-name>erraiProxy</servlet-name>
+        <description>Errai Proxy</description>
+        <servlet-class>org.jboss.errai.tools.proxy.XmlHttpProxyServlet</servlet-class>
+        <init-param>
+            <param-name>config.name</param-name>
+            <param-value>errai-proxy.json</param-value>
+        </init-param>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+    @comment.right@
+
+    <servlet>
+        <servlet-name>ErraiServlet</servlet-name>
+        <servlet-class>org.jboss.errai.bus.server.servlet.DefaultBlockingServlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet-mapping>
+        <servlet-name>ErraiServlet</servlet-name>
+        <url-pattern>*.erraiBus</url-pattern>
+    </servlet-mapping>
+
+    @comment.left@
+     <servlet-mapping>
+        <servlet-name>xmlProxy</servlet-name>
+        <url-pattern>/app/xhp/*</url-pattern>
+    </servlet-mapping>
+
+    <servlet-mapping>
+        <servlet-name>erraiProxy</servlet-name>
+        <url-pattern>/app/proxy/*</url-pattern>
+    </servlet-mapping>
+    @comment.right@
+
+</web-app>

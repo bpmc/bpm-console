@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <modelVersion>4.0.0</modelVersion>
-    <name>JBoss BPM - Console::GUI::Webapp</name>
+    <name>JBoss BPM - Console::GUI::Webapp Parent</name>
     <groupId>org.jboss.bpm</groupId>
     <artifactId>gwt-console-parent</artifactId>
     <packaging>pom</packaging>

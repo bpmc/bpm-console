@@ -17,7 +17,8 @@
   </parent>
 
   <modules>
-    <module>profiles</module>
+    <module>war-base</module>    
+    <module>war-templates</module>    
     <module>war</module>    
   </modules>
 </project>
