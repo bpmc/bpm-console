@@ -44,12 +44,12 @@
               <executions>
                 <execution>
                   <id>unpack-templates</id>
-                  <phase>generate-sources</phase>
+                  <phase>generate-resources</phase>
                   <goals>
                     <goal>unpack-dependencies</goal>
                   </goals>
                   <configuration>
-                    <includeArtifactIds>war-templates</includeArtifactIds>
+                    <includeArtifactIds>gwt-console-war-templates</includeArtifactIds>
                     <outputDirectory>${project.build.directory}/unpacked-templates</outputDirectory>
                   </configuration>
                 </execution>
@@ -60,7 +60,7 @@
               <executions>
                 <execution>
                   <id>filter-unpacked-templates</id>
-                  <phase>generate-resources</phase>
+                  <phase>process-resources</phase>
                   <goals>
                     <goal>copy-resources</goal>
                   </goals>
@@ -83,13 +83,13 @@
                       <webResource>
                         <directory>${project.build.directory}/filtered-templates</directory>
                       </webResource>
-                      <overlays>
-                        <overlay>
-                          <groupId>org.jboss.bpm</groupId>
-                          <artifactId>gwt-console-war-base</artifactId>
-                        </overlay>
-                      </overlays>
                     </webResources>
+                    <overlays>
+                      <overlay>
+                        <groupId>org.jboss.bpm</groupId>
+                        <artifactId>gwt-console-war-base</artifactId>
+                      </overlay>
+                    </overlays>
                 </configuration>
             </plugin>
         </plugins>
