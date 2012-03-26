@@ -19,6 +19,6 @@
   <modules>
     <module>war-base</module>    
     <module>war-templates</module>    
-    <module>war</module>    
+    <module>wars</module>    
   </modules>
 </project>
