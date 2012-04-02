@@ -39,6 +39,7 @@ import org.jboss.bpm.console.client.common.*;
 import org.jboss.bpm.console.client.model.TaskRef;
 import org.jboss.bpm.console.client.task.events.DetailViewEvent;
 import org.jboss.bpm.console.client.task.events.TaskIdentityEvent;
+import org.jboss.bpm.console.client.util.ConsoleLog;
 import org.jboss.bpm.console.client.util.SimpleDateFormat;
 import org.jboss.errai.bus.client.ErraiBus;
 import org.jboss.errai.bus.client.api.Message;
@@ -68,6 +69,8 @@ public class OpenTasksView extends AbstractTaskList implements WidgetProvider, D
   private MosaicPanel panel;
 
   private Controller controller;
+  
+  private Button skipBtn;
 
   private static boolean actionSetup = false;
 
@@ -83,6 +86,7 @@ public class OpenTasksView extends AbstractTaskList implements WidgetProvider, D
       controller.addAction(UpdateDetailsAction.ID, new UpdateDetailsAction());
       controller.addAction(AssignTaskAction.ID, new AssignTaskAction());
       controller.addAction(ReloadAllTaskListsAction.ID, new ReloadAllTaskListsAction());
+      controller.addAction(SkipTaskAction.ID, new SkipTaskAction());
 
       actionSetup = true;
     }
@@ -166,6 +170,11 @@ registerView(controller, tabPanel, AssignedTasksView.ID, new AssignedTasksView(a
               TaskRef task = getSelection(); // first call always null?
               if(task!=null)
               {
+            	  if (!task.isBlocking()) {
+            		  skipBtn.setEnabled(true);
+            	  } else {
+            		  skipBtn.setEnabled(false);
+            	  }
                 controller.handleEvent(
                     new Event(UpdateDetailsAction.ID, new DetailViewEvent("OpenDetailView", task))
                 );
@@ -215,6 +224,29 @@ registerView(controller, tabPanel, AssignedTasksView.ID, new AssignedTasksView(a
           }
           )
       );
+      
+      skipBtn = new Button("Skip", new ClickHandler() {
+          public void onClick(ClickEvent clickEvent)
+          {
+            TaskRef selection = getSelection();
+
+            if(selection!=null && !selection.isBlocking())
+            {
+            	controller.handleEvent(
+                        new Event(
+                            SkipTaskAction.ID,
+                            new TaskIdentityEvent(appContext.getAuthentication().getUsername(), selection)
+                        ));
+            }
+            else
+            {
+              MessageBox.alert("Missing selection", "Please select a task");
+            }
+          }
+        }
+        );
+      skipBtn.setEnabled(false);
+      toolBar.add(skipBtn);
 
       toolBox.add(toolBar, new BoxLayoutData(BoxLayoutData.FillStyle.HORIZONTAL));
 

@@ -73,14 +73,15 @@ public class DTOParser
     String assignee = JSONWalk.on(item).next("assignee").asString();
     boolean isBlocking = JSONWalk.on(item).next("isBlocking").asBool();
     boolean isSignalling = JSONWalk.on(item).next("isSignalling").asBool();
-
+    
     TaskRef ref = new TaskRef(
         id, executionId,
         processId,
         name, assignee,
         isSignalling, isBlocking
     );
-
+    ref.setBlocking(isBlocking);
+    ref.setSignalling(isSignalling);
     // task url reference maybe null
     JSONWalk.JSONWrapper jsonWrapper = JSONWalk.on(item).next("url");
     if(jsonWrapper!=null)

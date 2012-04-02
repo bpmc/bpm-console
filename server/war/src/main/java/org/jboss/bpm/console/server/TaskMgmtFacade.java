@@ -138,7 +138,7 @@ public class TaskMgmtFacade
       HttpServletRequest request,
       @PathParam("taskId")
       long taskId,
-      @QueryParam("outcome")
+      @PathParam("outcome")
       String outcome
   )
   {

@@ -40,6 +40,7 @@ import org.jboss.bpm.console.client.common.*;
 import org.jboss.bpm.console.client.model.TaskRef;
 import org.jboss.bpm.console.client.task.events.DetailViewEvent;
 import org.jboss.bpm.console.client.task.events.TaskIdentityEvent;
+import org.jboss.bpm.console.client.util.ConsoleLog;
 import org.jboss.bpm.console.client.util.SimpleDateFormat;
 import org.jboss.errai.bus.client.ErraiBus;
 import org.jboss.errai.bus.client.api.Message;
@@ -72,6 +73,8 @@ public class AssignedTasksView extends AbstractTaskList implements WidgetProvide
 
   private MosaicPanel panel;
 
+  private Button skipBtn;
+  
   public AssignedTasksView()
   {
     controller = Registry.get(Controller.class);
@@ -142,6 +145,11 @@ public class AssignedTasksView extends AbstractTaskList implements WidgetProvide
               TaskRef task = getSelection(); // first call always null?
               if(task!=null)
               {
+            	  if (!task.isBlocking()) {
+            		  skipBtn.setEnabled(true);
+            	  } else {
+            		  skipBtn.setEnabled(false);
+            	  }
                 controller.handleEvent(
                     new Event(UpdateDetailsAction.ID, new DetailViewEvent("AssignedDetailView", task))
                 );
@@ -235,6 +243,30 @@ public class AssignedTasksView extends AbstractTaskList implements WidgetProvide
           }
           )
       );
+      
+      skipBtn = new Button("Skip", new ClickHandler() {
+          public void onClick(ClickEvent clickEvent)
+          {
+            TaskRef selection = getSelection();
+
+            if(selection!=null && !selection.isBlocking())
+            {
+              controller.handleEvent(
+                  new Event(
+                      SkipTaskAction.ID,
+                      new TaskIdentityEvent(appContext.getAuthentication().getUsername(), selection)
+                  )
+              );
+            }
+            else
+            {
+              MessageBox.alert("Missing selection", "Please select a task");
+            }
+          }
+        }
+        );
+      skipBtn.setEnabled(false);
+      toolBar.add(skipBtn);
 
 
       toolBox.add(toolBar, new BoxLayoutData(BoxLayoutData.FillStyle.HORIZONTAL));

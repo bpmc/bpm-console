@@ -54,9 +54,10 @@ public class ReleaseTaskAction extends AbstractRESTAction
 
   public void handleSuccessfulResponse(final Controller controller, final Object event, Response response)
   {
-    // force refresh reload
-    controller.handleEvent(
-        new Event(ReloadAllTaskListsAction.ID, null)
-    );
+	  // reload only for current user
+	  String currentUser = appContext.getAuthentication().getUsername();
+	  controller.handleEvent(
+	      new Event(LoadTasksAction.ID, currentUser)
+	  );
   }
 }
