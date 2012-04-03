@@ -37,6 +37,7 @@ import org.jboss.bpm.console.client.util.DOMUtil;
 import org.jboss.errai.workspaces.client.framework.Registry;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -64,7 +65,12 @@ public class InstanceDataView extends MosaicPanel implements ViewInterface, Lazy
     isRiftsawInstance = appContext.getConfig().getProfileName().equals("BPEL Console");    
   }
 
-  public void initialize()
+  @Override
+	public void clear() {
+		bindData(Collections.EMPTY_LIST);
+	}
+
+public void initialize()
   {
     if(!isInitialized)
     {

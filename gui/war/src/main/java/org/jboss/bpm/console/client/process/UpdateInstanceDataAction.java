@@ -22,12 +22,16 @@
 package org.jboss.bpm.console.client.process;
 
 import com.google.gwt.http.client.RequestBuilder;
+import com.google.gwt.http.client.RequestException;
 import com.google.gwt.http.client.Response;
 import com.google.gwt.xml.client.Document;
 import com.google.gwt.xml.client.XMLParser;
 import com.mvc4g.client.Controller;
+
+import org.gwt.mosaic.ui.client.MessageBox;
 import org.jboss.bpm.console.client.URLBuilder;
 import org.jboss.bpm.console.client.common.AbstractRESTAction;
+import org.jboss.bpm.console.client.util.ConsoleLog;
 
 /**
  * @author Heiko.Braun <heiko.braun@jboss.com>
@@ -61,4 +65,16 @@ public class UpdateInstanceDataAction extends AbstractRESTAction
     InstanceDataView view = (InstanceDataView)controller.getView(InstanceDataView.ID);
     view.update(id, messageDom);
   }
+
+  @Override
+  protected void handleError(String url, Throwable t) {
+	  
+	String message = t.getMessage();
+	// remove the default prefix for errors added by AbstractRESTAction
+	message = message.replaceFirst("HTTP \\d*: ","");
+
+	ConsoleLog.warn("Server reported following warning: " + message + " for url " + url);
+	MessageBox.alert("Status information", message);
+  }
+  
 }

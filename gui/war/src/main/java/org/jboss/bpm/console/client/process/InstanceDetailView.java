@@ -291,6 +291,7 @@ public class InstanceDetailView extends CaptionLayoutPanel implements ViewInterf
 
     private void createDataWindow(ProcessInstanceRef inst)
     {
+    	instanceDataView.clear();
         instanceDataWindowPanel = new WidgetWindowPanel(
                 "Process Instance Data: "+inst.getId(),
                 instanceDataView, true

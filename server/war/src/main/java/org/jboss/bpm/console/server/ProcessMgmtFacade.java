@@ -38,6 +38,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.*;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
+import javax.ws.rs.core.Response.ResponseBuilder;
+import javax.ws.rs.core.Response.Status;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLDecoder;
@@ -221,10 +224,19 @@ public class ProcessMgmtFacade
       String instanceId
   )
   {
-    Map<String, Object> javaPayload = getProcessManagement().getInstanceData(instanceId);
-    Payload2XML payload2XML = new Payload2XML();
-    StringBuffer sb = payload2XML.convert(instanceId, javaPayload);
-    return Response.ok(sb.toString()).build();
+	try {
+	  Map<String, Object> javaPayload = getProcessManagement().getInstanceData(instanceId);
+      Payload2XML payload2XML = new Payload2XML();
+      StringBuffer sb = payload2XML.convert(instanceId, javaPayload);
+      return Response.ok(sb.toString()).build();
+	} catch (Exception e) {
+	  e.printStackTrace();	
+	  ResponseBuilder builder = Response.fromResponse(Response.ok(e.getMessage()).build());
+	  builder.status(Status.INTERNAL_SERVER_ERROR);
+		
+	  return builder.build();
+	}
+    
   }
 
   @POST
