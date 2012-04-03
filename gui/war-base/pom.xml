@@ -1,0 +1,394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <name>JBoss BPM - Console::GUI::Webapp Base</name>
+    <groupId>org.jboss.bpm</groupId>
+    <artifactId>gwt-console-war-base</artifactId>
+    <packaging>war</packaging>
+
+    <!-- Parent -->
+    <parent>
+        <groupId>org.jboss.bpm</groupId>
+        <artifactId>gwt-console-gui</artifactId>
+        <version>2.3.1-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+
+    <!--  Dependencies -->
+    <dependencies>
+
+        <dependency>
+            <groupId>org.jboss.errai</groupId>
+            <artifactId>errai-bus</artifactId>
+            <version>${errai.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-simple</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>slf4j-log4j12</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+                <exclusion>
+                	<groupId>xml-apis</groupId>
+                	<artifactId>xml-apis</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.errai</groupId>
+            <artifactId>errai-tools</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.errai</groupId>
+            <artifactId>errai-widgets</artifactId>
+            <version>${errai.version}</version>
+            <classifier>sources</classifier>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.errai</groupId>
+            <artifactId>errai-workspaces</artifactId>
+            <version>${errai.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.bpm</groupId>
+            <artifactId>activity-monitor-ui-lib</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-entitymanager</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-tools</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.bpm</groupId>
+            <artifactId>activity-monitor-ui-lib</artifactId>
+            <classifier>sources</classifier>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.bpm</groupId>
+            <artifactId>activity-monitor-model</artifactId>
+            <scope>provided</scope>
+            <version>${activity.monitor.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-core</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-annotations</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-entitymanager</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.hibernate</groupId>
+                    <artifactId>hibernate-tools</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javassist</groupId>
+                    <artifactId>javassist</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.bpm</groupId>
+            <artifactId>activity-monitor-model</artifactId>
+            <scope>provided</scope>
+            <version>${activity.monitor.version}</version>
+            <classifier>sources</classifier>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.jboss.bpm</groupId>
+            <artifactId>gwt-console-rpc</artifactId>
+            <classifier>sources</classifier>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.bpm</groupId>
+            <artifactId>gwt-console-rpc</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+            <exclusions>
+            	<exclusion>
+            		<groupId>xml-apis</groupId>
+            		<artifactId>xml-apis</artifactId>
+            	</exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jboss.bpm</groupId>
+            <artifactId>report-shared</artifactId>
+            <classifier>sources</classifier>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.jboss.bpm</groupId>
+            <artifactId>report-shared</artifactId>
+        </dependency>
+
+        <!-- GWT -->
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-servlet</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-user</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.gwt</groupId>
+            <artifactId>gwt-dev</artifactId>
+            <scope>provided</scope>
+            <version>${gwt.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mvel</groupId>
+            <artifactId>mvel2</artifactId>
+            <version>${mvel.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.guice</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.guice</groupId>
+            <artifactId>guice</artifactId>
+            <version>${guice.version}</version>
+            <classifier>aopalliance</classifier>
+        </dependency>
+
+        <!-- GWT extensions -->
+
+        <!-- Mosaic -->
+        <!--dependency>
+            <groupId>com.googlecode.gwtmosaic</groupId>
+            <artifactId>gwt-mosaic</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.gwtmosaic</groupId>
+            <artifactId>gwt-beans-binding</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.gwtmosaic</groupId>
+            <artifactId>gwt-dnd</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.googlecode.gwtmosaic</groupId>
+            <artifactId>gwtx</artifactId>
+            <scope>provided</scope>
+        </dependency-->
+
+        <dependency>
+            <groupId>com.googlecode.mvc4g</groupId>
+            <artifactId>mvc4g</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <!-- 3rd party -->
+
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>commons-configuration</groupId>
+            <artifactId>commons-configuration</artifactId>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.xml.bind</groupId>
+            <artifactId>jaxb-api</artifactId>
+            <version>${javax.jaxb.version}</version>
+            <classifier>sources</classifier>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.xml.stream</groupId>
+            <artifactId>stax-api</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-simple</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.9</version>
+        </dependency>
+
+    </dependencies>
+    
+    <!-- Plugins -->
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <configuration>
+                    <inplace>true</inplace>
+                    <logLevel>INFO</logLevel>
+                    <runTarget>app.html</runTarget>
+                    <extraJvmArgs>-Xmx1024m -XX:+UseParallelGC -server</extraJvmArgs>
+                    <localWorkers>2</localWorkers>
+                    <soyc>false</soyc>
+                    <style>OBF</style>
+                    <warSourceDirectory>${project.build.directory}/gwt-compiled</warSourceDirectory>
+                    <webappDirectory>${project.build.directory}/gwt-compiled</webappDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                      <id>gwt-clean-compile</id>
+                        <goals>
+                            <goal>clean</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <warSourceExcludes>.gwt-tmp/**</warSourceExcludes>
+                    <webResources>
+                      <webResource>
+                        <directory>${project.build.directory}/gwt-compiled</directory>
+                        <excludes>
+                            <exclude>app/.junit_symbolMaps/*.symbolMap</exclude>
+                            <exclude>app/junit.html</exclude>
+                            <exclude>app/junit-standards.html</exclude>
+                        </excludes>
+                      </webResource>
+                    </webResources>
+                </configuration>
+            </plugin>
+            <plugin>
+              <artifactId>maven-resources-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>generate-version-source</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                    <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                    <outputDirectory>${project.build.directory}/generated-sources/custom</outputDirectory>
+                    <resources>
+                      <resource>
+                        <directory>${project.basedir}/src/main/java.filtered</directory>
+                        <filtering>true</filtering>
+                      </resource>
+                    </resources>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>build-helper-maven-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>include-antrun-sources</id>
+                  <phase>process-sources</phase>
+                  <goals>
+                    <goal>add-source</goal>
+                  </goals>
+                  <configuration>
+                    <sources>
+                      <source>${project.build.directory}/generated-sources/custom</source>
+                    </sources>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

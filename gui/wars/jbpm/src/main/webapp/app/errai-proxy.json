@@ -1,0 +1,10 @@
+{"xhp": {
+    "version": "1.1",
+    "services": [
+        {"id": "default",
+         "url":"http://127.0.0.1:8080/jbpm-console/in.erraiBus",
+         "passthrough":true
+        },
+    ]
+  }
+}
