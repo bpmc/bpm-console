@@ -49,13 +49,15 @@ class SignalExecutionAction extends AbstractRESTAction
   public String getUrl(Object event)
   {
     final SignalInstanceEvent def = (SignalInstanceEvent)event;
-    if (def.getSignalName() == null || "".equals(def.getSignalName())) {
-      return URLBuilder.getInstance().getExecutionSignalUrl(def.getToken());
-    } else {
-      {
-        return URLBuilder.getInstance().getExecutionSignalUrl(def.getToken(), def.getSignalName());
-      }
+    String data = def.getToken().getName();
+    
+    String eventData = def.getSignalName();
+    if (eventData != null && !eventData.trim().equalsIgnoreCase("")) {
+    	data += "^"+eventData;
     }
+
+     return URLBuilder.getInstance().getExecutionSignalUrl(def.getToken(), data);
+
   }
 
   public RequestBuilder.Method getRequestMethod()

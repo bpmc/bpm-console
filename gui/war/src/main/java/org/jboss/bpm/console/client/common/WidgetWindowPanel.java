@@ -73,4 +73,9 @@ public class WidgetWindowPanel
     {
         window.hide();
     }
+    
+    public void setSize(Dimension dimension) {
+    	
+    	window.setContentSize(dimension);
+    }
 }
