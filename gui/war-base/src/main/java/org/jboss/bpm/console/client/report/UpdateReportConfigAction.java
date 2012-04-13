@@ -80,14 +80,10 @@ public class UpdateReportConfigAction extends AbstractRESTAction
   @Override
   public void handleError(String url, Throwable t) {
 	  final String out =
-			  "<b>Reporting Engine does not seem to be running. Please make sure it is running before creating reports.</b><br>" +
-			  "<b>Consult the jBPM Installer chapter in the documentation to learn how to set up the Reporting Engine.</b><br>" +
-			   "<ul>"+
-		       "<li>URL: '" + url + "'\n"+
-		       "<li>Action: '" + getId() + "'\n" +
-		       "<li>Exception: '" + t.getClass() +"'"+
-		       "</ul>\n\n";
-	  ConsoleLog.error(out, t);
-	  appContext.displayMessage(out, true);
+			  "Reporting Engine does not seem to be running. Please make sure it is running before creating reports. " +
+			  "Consult the jBPM Installer chapter in the documentation to learn how to set up the Reporting Engine.";
+			   
+	  ConsoleLog.warn(out);
+	  appContext.displayMessage(out, false);
   }
 }
