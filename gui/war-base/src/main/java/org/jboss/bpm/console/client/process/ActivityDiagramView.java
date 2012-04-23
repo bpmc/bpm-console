@@ -29,6 +29,7 @@ import org.jboss.bpm.console.client.model.ActiveNodeInfo;
 import org.jboss.bpm.console.client.model.ProcessDefinitionRef;
 import org.jboss.bpm.console.client.model.ProcessInstanceRef;
 import org.jboss.bpm.console.client.process.events.ActivityDiagramResultEvent;
+import org.jboss.bpm.console.client.util.ConsoleLog;
 
 import java.util.List;
 
@@ -63,6 +64,8 @@ public class ActivityDiagramView extends ScrollLayoutPanel
 
         List<ActiveNodeInfo> activeNodeInfos = event.getActiveNodeInfo();
         String imageUrl = event.getImageUrl();
+        String imageUrlNoCache = imageUrl+"?"+System.currentTimeMillis();
+        ConsoleLog.debug("Getting image from " + imageUrlNoCache);
 
         // remove contents
         this.clear();
@@ -70,7 +73,7 @@ public class ActivityDiagramView extends ScrollLayoutPanel
         String s =
                 "<div style='width:1024px; height:768px; background-color:#ffffff;'>" +
                         "<div id=\"imageContainer\" style=\"position:relative;top:-1;left:-1;\">" +
-                        "<img src=\""+imageUrl+"\" style=\"position:absolute;top:0;left:0\" />";
+                        "<img src=\""+imageUrlNoCache+"\" style=\"position:absolute;top:0;left:0\" />";
         for (ActiveNodeInfo activeNodeInfo: activeNodeInfos) {
 
             s+= 	"<div class=\"bpm-graphView-activityImage\" style=\"position:absolute;top:"+ (activeNodeInfo.getActiveNode().getY()-8) +"px;left:"+(activeNodeInfo.getActiveNode().getX()-8)+"px;width:50px;height:50px; z-index:1000;background-image: url(images/icons/play_red_big.png);background-repeat:no-repeat;\"></div>";
@@ -92,11 +95,12 @@ public class ActivityDiagramView extends ScrollLayoutPanel
     {
         // remove contents
         this.clear();
-
+        String imageUrlNoCache = imageUrl+"?"+System.currentTimeMillis();
+        ConsoleLog.debug("Getting image from " + imageUrlNoCache);
         String s =
                 "<div style='width:1024px; height:768px; background-color:#ffffff;'>" +
                         "<div id=\"imageContainer\" style=\"position:relative;top:-1;left:-1;\">" +
-                        "<img src=\""+imageUrl+"\" style=\"position:absolute;top:0;left:0\" />";
+                        "<img src=\""+imageUrlNoCache+"\" style=\"position:absolute;top:0;left:0\" />";
         s+= 	"</div>" +
                 "</div>";
 
