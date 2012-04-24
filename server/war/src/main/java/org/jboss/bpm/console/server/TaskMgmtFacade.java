@@ -84,14 +84,14 @@ public class TaskMgmtFacade
   }
 
   @POST
-  @Path("{taskId}/assign/{ifRef}")
+  @Path("{taskId}/assign/{idRef}")
   @Produces("application/json")
   public Response assignTask(
       @Context
       HttpServletRequest request,
       @PathParam("taskId")
       long taskId,
-      @PathParam("ifRef")
+      @PathParam("idRef")
       String idRef
   )
   {
