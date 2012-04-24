@@ -65,4 +65,6 @@ public interface TaskManagement
    * get unassigned tasks where a user participates    
    */
   List<TaskRef> getUnassignedTasks(String idRef, String participationType);
+  
+  List<TaskRef> getProcessInstanceTasks(String processInstanceId);
 }

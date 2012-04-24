@@ -423,6 +423,30 @@ public class ProcessMgmtFacade
 
   }
 
+  @GET
+  @Path("definition/history/{id}/instances")
+  @Produces("application/json")
+  public Response getCompletedInstances(
+      @PathParam("id")
+      String definitionId)
+  {
+	  ProcessInstanceRefWrapper wrapper =
+		  new ProcessInstanceRefWrapper(getProcessManagement().getHistoricProcessInstances(definitionId));
+	  return createJsonResponse(wrapper);
+  }
+
+  @GET
+  @Path("history/{processInstanceId}/nodes")
+  @Produces("application/json")
+  public Response getCompletedNodes(
+      @PathParam("processInstanceId")
+      String processInstanceId)
+  {
+	  NodeInstanceRefWrapper wrapper =
+		  new NodeInstanceRefWrapper(getProcessManagement().getNodeInstances(processInstanceId));
+	  return createJsonResponse(wrapper);
+  }
+
   private Response createJsonResponse(Object wrapper)
   {
     Gson gson = GsonFactory.createInstance();

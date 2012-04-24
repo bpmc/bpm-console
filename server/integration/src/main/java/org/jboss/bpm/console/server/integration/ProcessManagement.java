@@ -21,6 +21,7 @@
  */
 package org.jboss.bpm.console.server.integration;
 
+import org.jboss.bpm.console.client.model.NodeInstanceRef;
 import org.jboss.bpm.console.client.model.ProcessDefinitionRef;
 import org.jboss.bpm.console.client.model.ProcessInstanceRef;
 
@@ -40,7 +41,11 @@ public interface ProcessManagement
   List<ProcessDefinitionRef> removeProcessDefinition(String definitionId);
 
   List<ProcessInstanceRef> getProcessInstances(String definitionId);
+  
+  List<ProcessInstanceRef> getHistoricProcessInstances(String definitionId);
 
+  List<NodeInstanceRef> getNodeInstances(String processInstanceId);
+  
   ProcessInstanceRef getProcessInstance(String instanceId);
 
   ProcessInstanceRef newInstance(String defintionId);

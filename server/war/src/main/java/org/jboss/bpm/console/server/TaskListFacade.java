@@ -114,6 +114,19 @@ public class TaskListFacade
     return processTaskListResponse(taskParticipation);
   }
 
+  @GET
+  @Path("history/{processInstanceId}")
+  @Produces("application/json")
+  public Response getTasksForProcessInstance(
+      @PathParam("processInstanceId")
+      String processInstanceId
+  )
+  {
+    List<TaskRef> tasks = getTaskManagement().getProcessInstanceTasks(processInstanceId);
+    TaskRefWrapper wrapper = new TaskRefWrapper(tasks);
+    return createJsonResponse(wrapper);
+  }
+
   private Response processTaskListResponse(List<TaskRef> taskList)
   {
     // decorate task form URL if plugin available
