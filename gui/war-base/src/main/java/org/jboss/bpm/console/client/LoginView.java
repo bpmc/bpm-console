@@ -202,7 +202,7 @@ public class LoginView implements ViewInterface
                                 {
                                     usernameInput.setText("");
                                     passwordInput.setText("");
-                                    messagePanel.setHTML("<div style='color:#CC0000;'>Authentication failed. Please try again:</div>");
+                                    messagePanel.setHTML("<div style='color:#CC0000;'>"+t.getMessage()+ "</div>");
                                 }
                             }
                     );

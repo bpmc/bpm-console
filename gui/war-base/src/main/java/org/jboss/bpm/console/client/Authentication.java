@@ -85,9 +85,18 @@ public class Authentication
               if(response.getText().indexOf("HTTP 401")!=-1) // HACK
               {
                 if (callback != null)
-                  callback.onLoginFailed(request, new Exception("Authentication failed"));
+                  callback.onLoginFailed(request, new Exception("Authentication failed. Please try again"));
                 else
                   throw new RuntimeException("Unknown exception upon login attempt");
+              } 
+              else if(response.getText().indexOf("403")!=-1)
+              {
+            	  // make sure to logout since user has been authenticated but does not have right roles assigned
+            	  logout(config);
+                  if (callback != null)
+                	  callback.onLoginFailed(request, new Exception("You are not authorized to use this application"));
+                  else
+                    throw new RuntimeException("Unknown exception upon login attempt");
               }
               else if(response.getStatusCode()==200) // it's always 200, even when the authentication fails
               {
@@ -107,7 +116,7 @@ public class Authentication
             public void onError(Request request, Throwable t)
             {
               if (callback != null)
-                callback.onLoginFailed(request, new Exception("Authentication failed"));
+            	 callback.onLoginFailed(request, new Exception("Authentication failed"));
               else
                 throw new RuntimeException("Unknown exception upon login attempt");
             }
