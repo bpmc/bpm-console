@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <name>JBoss BPM - Console::GUI::Profile::RiftSaw</name>
+  <name>JBoss BPM - Console::GUI::Webapp::RiftSaw</name>
   <groupId>org.jboss.bpm</groupId>
   <artifactId>gwt-console-riftsaw</artifactId>
   <packaging>war</packaging>
@@ -11,14 +11,26 @@
   <!-- Parent -->
   <parent>
     <groupId>org.jboss.bpm</groupId>
-    <artifactId>gwt-console-gui-parent</artifactId>
+    <artifactId>gwt-console-war-parent</artifactId>
     <version>2.5.0-SNAPSHOT</version>
   </parent>
   
   <build>
-    <filters>
-      <filter>src/main/properties/riftsaw.properties</filter>
-    </filters>
+   <filters>
+     <filter>src/main/properties/riftsaw.properties</filter>
+   </filters>
+   <plugins>
+     <plugin>
+       <artifactId>maven-dependency-plugin</artifactId>
+     </plugin>
+     <plugin>
+       <groupId>org.codehaus.mojo</groupId>
+       <artifactId>build-helper-maven-plugin</artifactId>
+     </plugin>
+     <plugin>
+       <groupId>org.codehaus.mojo</groupId>
+       <artifactId>gwt-maven-plugin</artifactId>
+     </plugin>
+   </plugins>
   </build>
-   
 </project>

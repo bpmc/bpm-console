@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+    <modelVersion>4.0.0</modelVersion>
+    <name>JBoss BPM - Console::GUI::GWT WAR Application Base</name>
+    <groupId>org.jboss.bpm</groupId>
+    <artifactId>gwt-console-app-base</artifactId>
+
+    <!-- Parent -->
+    <parent>
+        <groupId>org.jboss.bpm</groupId>
+        <artifactId>gwt-console-gui</artifactId>
+        <version>2.5.0-SNAPSHOT</version>
+    </parent>
+
+    <!--  Dependencies declared in parent to facilitate reuse. -->
+    
+    <!-- Plugins -->
+    <build>
+        <plugins>
+          
+          <plugin>
+            <artifactId>maven-source-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>package-sources</id>
+                <goals>
+                  <goal>jar-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+
+            <!-- <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
+                <configuration>
+                    <inplace>true</inplace>
+                    <logLevel>INFO</logLevel>
+                    <runTarget>app.html</runTarget>
+                    <extraJvmArgs>-Xmx1024m -XX:+UseParallelGC -server</extraJvmArgs>
+                    <localWorkers>2</localWorkers>
+                    <soyc>false</soyc>
+                    <style>PRETTY</style>
+                    <warSourceDirectory>${project.build.directory}/gwt-compiled</warSourceDirectory>
+                    <webappDirectory>${project.build.directory}/gwt-compiled</webappDirectory>
+                </configuration>
+                <dependencies> -->
+                  <!-- Explicitly declare gwt dependencies to ensure the use of the same GWT version. -->
+                  <!-- <dependency>
+                    <groupId>com.google.gwt</groupId>
+                    <artifactId>gwt-servlet</artifactId>
+                    <version>${gwt.version}</version>
+                  </dependency>
+                  <dependency>
+                    <groupId>com.google.gwt</groupId>
+                    <artifactId>gwt-user</artifactId>
+                    <version>${gwt.version}</version>
+                  </dependency>
+                  <dependency>
+                    <groupId>com.google.gwt</groupId>
+                    <artifactId>gwt-dev</artifactId>
+                    <version>${gwt.version}</version>
+                  </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                      <id>gwt-clean-compile</id>
+                        <goals>
+                            <goal>clean</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin> -->
+            <!-- <plugin>
+                <artifactId>maven-war-plugin</artifactId>
+                <configuration>
+                    <warSourceExcludes>.gwt-tmp/**</warSourceExcludes>
+                    <webResources>
+                      <webResource>
+                        <directory>${project.build.directory}/gwt-compiled</directory>
+                        <excludes>
+                            <exclude>app/.junit_symbolMaps/*.symbolMap</exclude>
+                            <exclude>app/junit.html</exclude>
+                            <exclude>app/junit-standards.html</exclude>
+                        </excludes>
+                      </webResource>
+                    </webResources>
+                </configuration>
+            </plugin> -->
+            <plugin>
+              <artifactId>maven-resources-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>generate-version-source</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                    <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                    <outputDirectory>${project.build.directory}/generated-sources/custom</outputDirectory>
+                    <resources>
+                      <resource>
+                        <directory>${project.basedir}/src/main/java.filtered</directory>
+                        <filtering>true</filtering>
+                      </resource>
+                    </resources>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
+              <groupId>org.codehaus.mojo</groupId>
+              <artifactId>build-helper-maven-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>include-antrun-sources</id>
+                  <phase>process-sources</phase>
+                  <goals>
+                    <goal>add-source</goal>
+                  </goals>
+                  <configuration>
+                    <sources>
+                      <source>${project.build.directory}/generated-sources/custom</source>
+                    </sources>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

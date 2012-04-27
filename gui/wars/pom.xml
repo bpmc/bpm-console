@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
     <modelVersion>4.0.0</modelVersion>
-    <name>JBoss BPM - Console::GUI::Webapp</name>
+    <name>JBoss BPM - Console::GUI::Webapp Parent</name>
     <groupId>org.jboss.bpm</groupId>
-    <artifactId>gwt-console-gui-parent</artifactId>
+    <artifactId>gwt-console-war-parent</artifactId>
     <packaging>pom</packaging>
 
     <!-- Parent -->
@@ -18,85 +18,188 @@
       <module>riftsaw</module>
     </modules>
     
+    <properties>
+      <mergedWarSourceDirectory>${project.build.directory}/merged-webapp</mergedWarSourceDirectory>
+    </properties>
+    
     <dependencies>
+      <dependency>
+        <groupId>org.jboss.bpm</groupId>
+        <artifactId>gwt-console-war-base</artifactId>
+        <version>${project.version}</version>
+        <scope>provided</scope>
+        <type>war</type>
+      </dependency>
+      <!-- used to explode sources for GWT-compile -->
+      <dependency>
+        <groupId>org.jboss.bpm</groupId>
+        <artifactId>gwt-console-app-base</artifactId>
+        <version>${project.version}</version>
+        <scope>provided</scope>
+        <classifier>sources</classifier>
+      </dependency>
+      <!-- used to explode/filter properties specific to app -->
       <dependency>
         <groupId>org.jboss.bpm</groupId>
         <artifactId>gwt-console-war-templates</artifactId>
         <version>${project.version}</version>
         <scope>provided</scope>
       </dependency>
-      <dependency>
-        <groupId>org.jboss.bpm</groupId>
-        <artifactId>gwt-console-war-base</artifactId>
-        <type>war</type>
-        <version>${project.version}</version>
-        <scope>provided</scope>
-      </dependency>
     </dependencies>
     
+    <!-- Plugins -->
     <build>
+      <sourceDirectory>${project.build.directory}/generated-sources/unpacked-gwt-sources</sourceDirectory>
+      <resources>
+        <resource>
+          <directory>${project.build.sourceDirectory}</directory>
+          <includes>
+            <include>*.properties</include>
+            <include>*.json</include>
+            <include>*.xml</include>
+          </includes>
+          <filtering>false</filtering>
+        </resource>
+        <resource>
+          <directory>src/main/resources</directory>
+        </resource>
+      </resources>
       <pluginManagement>
         <plugins>
-          <plugin>
-            <artifactId>maven-dependency-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>unpack-templates</id>
-                <phase>generate-sources</phase>
-                <goals>
-                  <goal>unpack-dependencies</goal>
-                </goals>
+            <plugin>
+              <artifactId>maven-dependency-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>unpack-gwt-sources</id>
+                  <phase>generate-sources</phase>
+                  <goals>
+                    <goal>unpack-dependencies</goal>
+                  </goals>
+                  <configuration>
+                    <includeArtifactIds>gwt-console-app-base</includeArtifactIds>
+                    <includeClassifiers>sources</includeClassifiers>
+                    <outputDirectory>${project.build.sourceDirectory}</outputDirectory>
+                  </configuration>
+                </execution>
+                <execution>
+                  <id>unpack-templates</id>
+                  <phase>generate-resources</phase>
+                  <goals>
+                    <goal>unpack-dependencies</goal>
+                  </goals>
+                  <configuration>
+                    <includeArtifactIds>gwt-console-war-templates</includeArtifactIds>
+                    <outputDirectory>${project.build.directory}/unpacked-templates</outputDirectory>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
+              <artifactId>maven-resources-plugin</artifactId>
+              <executions>
+                <execution>
+                  <id>filter-unpacked-templates</id>
+                  <phase>process-resources</phase>
+                  <goals>
+                    <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                    <resources>
+                      <resource>
+                        <directory>${project.build.directory}/unpacked-templates</directory>
+                        <filtering>true</filtering>
+                      </resource>
+                    </resources>
+                    <outputDirectory>${project.build.directory}/filtered-templates</outputDirectory>
+                  </configuration>
+                </execution>
+                <execution>
+                  <id>merge-webapp-with-resources</id>
+                  <phase>process-resources</phase>
+                  <goals>
+                    <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                    <resources>
+                      <resource>
+                        <directory>src/main/webapp</directory>
+                      </resource>
+                      <resource>
+                        <directory>src/main/resources</directory>
+                      </resource>
+                      <resource>
+                        <directory>src/main/resources</directory>
+                        <targetPath>app</targetPath>
+                      </resource>
+                    </resources>
+                    <outputDirectory>${mergedWarSourceDirectory}</outputDirectory>
+                  </configuration>
+                </execution>
+              </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-war-plugin</artifactId>
                 <configuration>
-                  <includeArtifactIds>gwt-console-war-templates</includeArtifactIds>
-                  <outputDirectory>${project.build.directory}/unpacked-templates</outputDirectory>
+                  <packagingExcludes>WEB-INF/classes/toolset-profile.properties</packagingExcludes>
+                  <warSourceExcludes>.gwt-tmp/**</warSourceExcludes>
+                  <warSourceDirectory>${mergedWarSourceDirectory}</warSourceDirectory>
+                    <webResources>
+                      <webResource>
+                        <directory>${project.build.directory}/filtered-templates</directory>
+                      </webResource>
+                    </webResources>
+                    <overlays>
+                      <overlay>
+                        <groupId>org.jboss.bpm</groupId>
+                        <artifactId>gwt-console-war-base</artifactId>
+                      </overlay>
+                    </overlays>
                 </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <artifactId>maven-resources-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>filter-unpacked-templates</id>
-                <phase>generate-resources</phase>
-                <goals>
-                  <goal>copy-resources</goal>
-                </goals>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>gwt-maven-plugin</artifactId>
                 <configuration>
-                  <resources>
-                    <resource>
-                      <directory>${project.build.directory}/unpacked-templates</directory>
-                      <filtering>true</filtering>
-                    </resource>
-                  </resources>
-                  <outputDirectory>${project.build.directory}/filtered-templates</outputDirectory>
+                    <inplace>true</inplace>
+                    <logLevel>INFO</logLevel>
+                    <runTarget>app.html</runTarget>
+                    <extraJvmArgs>-Xmx1024m -XX:+UseParallelGC -server</extraJvmArgs>
+                    <localWorkers>2</localWorkers>
+                    <soyc>false</soyc>
+                    <style>PRETTY</style>
+                    <warSourceDirectory>${mergedWarSourceDirectory}</warSourceDirectory>
                 </configuration>
-              </execution>
-            </executions>
-          </plugin>
-          <plugin>
-            <artifactId>maven-war-plugin</artifactId>
-            <configuration>
-              <overlays>
-                <overlay>
-                  <groupId>${project.groupId}</groupId>
-                  <artifactId>gwt-console-war-base</artifactId>
-                </overlay>
-              </overlays>
-              <webResources>
-                <webResource>
-                  <directory>${project.build.directory}/filtered-templates</directory>
-                </webResource>
-              </webResources>
-            </configuration>
-          </plugin>
+                <dependencies>
+                  <!-- Explicitly declare gwt dependencies to ensure the use of the same GWT version. -->
+                  <dependency>
+                    <groupId>com.google.gwt</groupId>
+                    <artifactId>gwt-servlet</artifactId>
+                    <version>${gwt.version}</version>
+                  </dependency>
+                  <dependency>
+                    <groupId>com.google.gwt</groupId>
+                    <artifactId>gwt-user</artifactId>
+                    <version>${gwt.version}</version>
+                  </dependency>
+                  <dependency>
+                    <groupId>com.google.gwt</groupId>
+                    <artifactId>gwt-dev</artifactId>
+                    <version>${gwt.version}</version>
+                  </dependency>
+                </dependencies>
+                <executions>
+                    <execution>
+                      <id>gwt-clean-compile</id>
+                      <phase>compile</phase>
+                        <goals>
+                            <goal>clean</goal>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
       </pluginManagement>
-      <plugins>
-        <plugin>
-          <artifactId>maven-dependency-plugin</artifactId>
-        </plugin>
-      </plugins>
     </build>
 
 </project>
