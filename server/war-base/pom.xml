@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 
   <modelVersion>4.0.0</modelVersion>
-  <name>JBoss BPM - Console::Server::Webapp</name>
+  <name>JBoss BPM - Console::Server::Webapp Base (Overlay)</name>
   <groupId>org.jboss.bpm</groupId>
-  <artifactId>gwt-console-server</artifactId>
+  <artifactId>gwt-console-server-war-base</artifactId>
   <packaging>war</packaging>
 
   <!-- Parent -->
@@ -267,31 +267,6 @@
       </plugin>
 
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <configuration>
-          <webResources>
-            <resource>
-              <!-- this is relative to the pom.xml directory -->
-              <directory>src/main/templates</directory>
-              <filtering>true</filtering>
-            </resource>
-          </webResources>
-        </configuration>
-        <executions>
-          <execution>
-            <id>default-war</id>
-            <configuration>
-              <filters>
-                <filter>${project.basedir}/src/main/properties/default.properties</filter>
-              </filters>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-
-
-      <plugin>
          <artifactId>maven-antrun-plugin</artifactId>
          <executions>
           <execution>
@@ -334,112 +309,6 @@
       </plugin>
 
     </plugins>
-    
-    <finalName>gwt-console-server</finalName>
   </build>
-
-  <!--
-     jBPM profile
-  -->
-  <profiles>
-    <profile>
-      <id>jbpm</id>
-      <activation>
-      	<property>
-        	<name>console.profile</name>
-            	<value>jbpm</value>
-            </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>jbpm-war</id>
-                <goals>
-                  <goal>war</goal>
-                </goals>
-                <configuration>
-                  <filters>
-                    <filter>${project.basedir}/src/main/properties/jbpm.properties</filter>
-                  </filters>
-                  <webappDirectory>${project.build.directory}/jbpm-war</webappDirectory>
-                  <classifier>jbpm</classifier>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>drools</id>
-      <activation>
-        <property>
-          <name>console.profile</name>
-          <value>drools</value>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>drools-war</id>
-                <goals>
-                  <goal>war</goal>
-                </goals>
-                <configuration>
-                  <filters>
-                    <filter>${project.basedir}/src/main/properties/drools.properties</filter>
-                  </filters>
-                  <webappDirectory>${project.build.directory}/drools-war</webappDirectory>
-                  <classifier>drools</classifier>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-
-    <profile>
-      <id>riftsaw</id>
-      <activation>
-        <property>
-          <name>console.profile</name>
-          <value>riftsaw</value>
-        </property>
-      </activation>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-war-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>riftsaw-war</id>
-                <goals>
-                  <goal>war</goal>
-                </goals>
-                <configuration>
-                  <filters>
-                    <filter>${project.basedir}/src/main/properties/riftsaw.properties</filter>
-                  </filters>
-                  <webappDirectory>${project.build.directory}/riftsaw-war</webappDirectory>
-                  <classifier>riftsaw</classifier>
-                </configuration>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-  </profiles>
 
 </project>

@@ -6,7 +6,7 @@
 
 <jboss-web>
 
-  <security-domain>${server.jaas.domain}</security-domain>
+  <security-domain>java:/jaas/jbpm-console</security-domain>
 
   <context-root>gwt-console-server</context-root>
 
