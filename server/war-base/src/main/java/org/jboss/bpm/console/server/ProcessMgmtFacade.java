@@ -230,7 +230,7 @@ public class ProcessMgmtFacade
       StringBuffer sb = payload2XML.convert(instanceId, javaPayload);
       return Response.ok(sb.toString()).build();
 	} catch (Exception e) {
-	  e.printStackTrace();	
+	  log.error("Error when getting instance data", e);	
 	  ResponseBuilder builder = Response.fromResponse(Response.ok(e.getMessage()).build());
 	  builder.status(Status.INTERNAL_SERVER_ERROR);
 		
@@ -249,10 +249,18 @@ public class ProcessMgmtFacade
       @PathParam("next")
       String next)
   {
-    ProcessInstanceRef.STATE state = ProcessInstanceRef.STATE.valueOf(next);
-    log.debug("Change instance (ID "+executionId+") to state " +state);
-    getProcessManagement().setProcessState(executionId, state);
-    return Response.ok().type("application/json").build();
+    try {
+	  ProcessInstanceRef.STATE state = ProcessInstanceRef.STATE.valueOf(next);
+	  log.debug("Change instance (ID "+executionId+") to state " +state);
+	  getProcessManagement().setProcessState(executionId, state);
+	  return Response.ok().type("application/json").build();
+    } catch (Exception e) {
+	  log.error("Error when getting changing state of process instance", e);	
+	  ResponseBuilder builder = Response.fromResponse(Response.ok(e.getMessage()).build());
+	  builder.status(Status.INTERNAL_SERVER_ERROR);
+		
+	  return builder.build();
+	}
   }
 
   @POST
@@ -264,10 +272,18 @@ public class ProcessMgmtFacade
       @PathParam("result")
       String resultValue)
   {
-    ProcessInstanceRef.RESULT result = ProcessInstanceRef.RESULT.valueOf(resultValue);
-    log.debug("Change instance (ID "+executionId+") to state " + ProcessInstanceRef.STATE.ENDED);
-    getProcessManagement().endInstance(executionId, result);
-    return Response.ok().type("application/json").build();
+	try {
+	  ProcessInstanceRef.RESULT result = ProcessInstanceRef.RESULT.valueOf(resultValue);
+	  log.debug("Change instance (ID "+executionId+") to state " + ProcessInstanceRef.STATE.ENDED);
+	  getProcessManagement().endInstance(executionId, result);
+	  return Response.ok().type("application/json").build();
+  	} catch (Exception e) {
+	  log.error("Error when getting ending of process instance", e);	
+	  ResponseBuilder builder = Response.fromResponse(Response.ok(e.getMessage()).build());
+	  builder.status(Status.INTERNAL_SERVER_ERROR);
+		
+	  return builder.build();
+	}
   }
 
   @POST
@@ -279,9 +295,17 @@ public class ProcessMgmtFacade
       String executionId
   )
   {
-    log.debug("Delete instance (ID "+executionId+")");
-    getProcessManagement().deleteInstance(executionId);
-    return Response.ok().type("application/json").build();
+	try {
+	  log.debug("Delete instance (ID "+executionId+")");
+      getProcessManagement().deleteInstance(executionId);
+      return Response.ok().type("application/json").build();
+  	} catch (Exception e) {
+	  log.error("Error when getting ending of process instance", e);	
+	  ResponseBuilder builder = Response.fromResponse(Response.ok(e.getMessage()).build());
+	  builder.status(Status.INTERNAL_SERVER_ERROR);
+		
+	  return builder.build();
+	}
   }
 
   @POST
