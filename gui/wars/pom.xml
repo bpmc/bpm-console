@@ -114,6 +114,10 @@
                   </configuration>
                 </execution>
                 <execution>
+                  <!-- Give gwt-compile a target to process that's NOT under source control.
+                       The reason is that gwt-compile DELETES files when it runs! 
+                       http://code.google.com/p/google-web-toolkit/issues/detail?id=4669 
+                       (still marked 'new' as of 1 May, 2012.) -->
                   <id>merge-webapp-with-resources</id>
                   <phase>process-resources</phase>
                   <goals>
@@ -124,11 +128,23 @@
                       <resource>
                         <directory>src/main/webapp</directory>
                       </resource>
+                    </resources>
+                    <outputDirectory>${mergedWarSourceDirectory}</outputDirectory>
+                  </configuration>
+                </execution>
+                <execution>
+                  <!-- Recopy the files that gwt-compile DELETED. 
+                       http://code.google.com/p/google-web-toolkit/issues/detail?id=4669
+                       (still marked 'new' as of 1 May, 2012.) -->
+                  <id>recopy-gwt-resources</id>
+                  <phase>process-classes</phase>
+                  <goals>
+                    <goal>copy-resources</goal>
+                  </goals>
+                  <configuration>
+                    <resources>
                       <resource>
-                        <directory>src/main/resources</directory>
-                      </resource>
-                      <resource>
-                        <directory>src/main/resources</directory>
+                        <directory>src/main/webapp/app</directory>
                         <targetPath>app</targetPath>
                       </resource>
                     </resources>
