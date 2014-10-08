@@ -4,7 +4,7 @@
     <name>JBoss BPM - Console</name>
     <groupId>org.jboss.bpm</groupId>
     <artifactId>gwt-console-parent</artifactId>
-    <version>2.4.7-SNAPSHOT</version>
+    <version>2.4.7.Final</version>
     <packaging>pom</packaging>
 
     <description>BPM Management console used by Riftsaw, jBPM and Drools Flow</description>
@@ -12,7 +12,7 @@
     <parent>
         <groupId>org.jboss.integration-platform</groupId>
         <artifactId>jboss-integration-platform-parent</artifactId>
-        <version>6.0.0.CR9</version>
+        <version>6.0.0.CR12</version>
     </parent>
 
     <url>
@@ -90,11 +90,11 @@
         <mvel.version>2.0.18-RC4</mvel.version>
         <guice.version>2.0</guice.version>
 
-        <overlord-commons.version>2.0.8-SNAPSHOT</overlord-commons.version>
+        <overlord-commons.version>2.0.11.Final</overlord-commons.version>
         <picketbox.version>4.0.19.SP4</picketbox.version>
         <picketlink.version>2.5.3.SP4</picketlink.version>
 
-        <activity.monitor.version>1.2.2.Final</activity.monitor.version>
+        <activity.monitor.version>1.2.3.Final</activity.monitor.version>
     </properties>
 
     <modules>
@@ -111,7 +111,7 @@
             <dependency>
                 <groupId>org.jboss.integration-platform</groupId>
                 <artifactId>jboss-integration-platform-bom</artifactId>
-                <version>6.0.0.CR9</version>
+                <version>6.0.0.CR12</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
