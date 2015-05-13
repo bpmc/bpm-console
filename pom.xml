@@ -4,7 +4,7 @@
     <name>JBoss BPM - Console</name>
     <groupId>org.jboss.bpm</groupId>
     <artifactId>gwt-console-parent</artifactId>
-    <version>2.4.6-SNAPSHOT</version>
+    <version>2.4.8.Final</version>
     <packaging>pom</packaging>
 
     <description>BPM Management console used by Riftsaw, jBPM and Drools Flow</description>
